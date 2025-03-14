@@ -69,7 +69,7 @@ namespace BTCPayServer.Plugins.Monero.Payments
             var feeAtomicRatePerByte = await moneroPrepare.GetFeeRate;
             var address = await moneroPrepare.ReserveAddress(invoice.Id);
 
-            var feeRatePerByte = feeAtomicRatePerByte.Fee / 10 ** 12;
+            var feeRatePerByte = feeAtomicRatePerByte.Fee / Math.Pow(10, 12);
             var details = new MoneroLikeOnChainPaymentMethodDetails()
             {
                 AccountIndex = moneroPrepare.AccountIndex,
