@@ -135,12 +135,21 @@ public class PlaywrightBaseTest : UnitTestBase, IDisposable
         return (name, storeId);
     }
 
-    public async Task InitializeBTCPayServer()
+    public async Task InitializeBTCPayServerWithMoneroPlugin()
     {
         await GoToUrl("/register");
         await RegisterNewUser(true);
         await CreateNewStoreAsync();
         await GoToStore();
-        // await AddMoneroPlugin();
+        await ConfigureAndEnableMoneroPlugin();
+    }
+
+    private async Task ConfigureAndEnableMoneroPlugin()
+    {
+        await Page.Locator("a.nav-link[href*='monerolike/XMR']").ClickAsync();
+        await Page.Locator("#NewAccountLabel").FillAsync("Wallet Label");
+        await Page.CheckAsync("#Enabled");
+        await Page.SelectOptionAsync("#SettlementConfirmationThresholdChoice", "2");
+        await Page.ClickAsync("#SaveButton");
     }
 }

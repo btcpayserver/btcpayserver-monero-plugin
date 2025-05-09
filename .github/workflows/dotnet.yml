@@ -13,6 +13,8 @@ jobs:
 
     env:
       CI: true
+      BTCPAY_XMR_DAEMON_URI: "http://127.0.0.1:18081"
+      BTCPAY_XMR_WALLET_DAEMON_URI: "http://127.0.0.1:18082"
       
     steps:
 

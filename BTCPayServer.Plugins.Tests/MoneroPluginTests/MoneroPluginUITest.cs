@@ -23,9 +23,7 @@ public class MoneroPluginUITest : PlaywrightBaseTest, IClassFixture<MoneroPlugin
     public async Task EnableMoneroPaymentTest()
     {
         await InitializePlaywright(ServerTester.PayTester.ServerUri);
-        await InitializeBTCPayServer();
-
-        // Todo
+        await InitializeBTCPayServerWithMoneroPlugin();
     }
 
     public class MoneroPluginServerTesterFixture : IDisposable
@@ -44,6 +42,7 @@ public class MoneroPluginUITest : PlaywrightBaseTest, IClassFixture<MoneroPlugin
             {
                 var testDir = Path.Combine(Directory.GetCurrentDirectory(), "MoneroPluginUITest");
                 ServerTester = testInstance.CreateServerTester(testDir, true);
+                // ServerTester.PayTester.Chains =  ["XMR"];
                 ServerTester.StartAsync().GetAwaiter().GetResult();
             }
         }
