@@ -40,6 +40,9 @@ jobs:
     - name: Start containers
       run: docker compose -f docker-compose.yml up -d dev
 
+    - name: Run unit tests
+      run: dotnet test BTCPayServer.Plugins.Monero.UnitTests --verbosity normal
+
     - name: Run integration tests
       run: dotnet test BTCPayServer.Plugins.Tests --verbosity normal
 
