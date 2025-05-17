@@ -1,3 +1,4 @@
 [submodule "btcpayserver"]
 	path = btcpayserver
-	url = https://github.com/btcpayserver/btcpayserver
+	url = https://github.com/napoly/btcpayserver.git
+	branch = xmr-plugin-with-test-dir
