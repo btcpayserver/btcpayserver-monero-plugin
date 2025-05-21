@@ -1,4 +1,3 @@
-// filepath: Plugins/Monero/RPC/Models/ParseStringConverterTests.cs
 using System;
 using System.IO;
 using System.Globalization;
