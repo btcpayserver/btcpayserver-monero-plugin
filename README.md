@@ -1,6 +1,7 @@
 <div align="center">
   
   ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/btcpay-monero/btcpayserver-monero-plugin/dotnet.yml?branch=master)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/c454e5f9eead431aaa8d8dddf1b778dd)](https://app.codacy.com/gh/btcpay-monero/btcpayserver-monero-plugin?utm_source=github.com&utm_medium=referral&utm_content=btcpay-monero/btcpayserver-monero-plugin&utm_campaign=Badge_Grade)
   [![Matrix rooms](https://img.shields.io/badge/%F0%9F%92%AC%20Matrix-%23btcpay--monero-blue)](https://matrix.to/#/#btcpay-monero:matrix.org)
 </div>
 
