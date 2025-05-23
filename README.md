@@ -2,6 +2,7 @@
   
   ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/btcpay-monero/btcpayserver-monero-plugin/dotnet.yml?branch=master)
   [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a86461725075418b95ae501256839500)](https://app.codacy.com/gh/btcpay-monero/btcpayserver-monero-plugin/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+  [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/a86461725075418b95ae501256839500)](https://app.codacy.com/gh/btcpay-monero/btcpayserver-monero-plugin/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
   [![Matrix rooms](https://img.shields.io/badge/%F0%9F%92%AC%20Matrix-%23btcpay--monero-blue)](https://matrix.to/#/#btcpay-monero:matrix.org)
 </div>
 
@@ -39,7 +40,19 @@ To build and run unit tests, run the following commands:
 dotnet build btcpay-monero-plugin.sln
 dotnet test BTCPayServer.Plugins.Monero.UnitTests --verbosity normal
 ```
-This will build the plugin and run the unit tests.
+To run unit tests with coverage, run the following command:
+
+```bash
+dotnet test BTCPayServer.Plugins.Monero.UnitTests/BTCPayServer.Plugins.UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=json /p:CoverletOutput=../coverage/coverage.json 
+```
+
+To build and run integration tests, run the following commands:
+
+```bash
+dotnet build btcpay-monero-plugin.sln
+docker compose -f BTCPayServer.Plugins.IntegrationTests/docker-compose.yml run tests
+```
+
 
 
 If you are a developer maintaining this plugin, in order to maintain this plugin, you need to clone this repository with `--recurse-submodules`:

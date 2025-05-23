@@ -50,8 +50,8 @@ jobs:
       if: always()
       run: docker compose -f BTCPayServer.Plugins.IntegrationTests/docker-compose.yml down -v
 
-    - name: Run codacy-coverage-reporter
-      uses: codacy/codacy-coverage-reporter-action@v1.3.0
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
       with:
-        project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-        coverage-reports: coverage/coverage.cobertura.xml
+        name: coverage-report
+        path: coverage/coverage.cobertura.xml
