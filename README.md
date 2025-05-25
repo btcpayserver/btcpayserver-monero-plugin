@@ -125,3 +125,19 @@ Lunanode, a VPS provider, offers an [easy way to provision the infrastructure](h
 # Licence
 
 [MIT](LICENSE.md)
+
+My notes:
+Git C# submodules
+BTC Pay Server embedded running as reference and can be called when programing
+Notes up to the Read me for a vendor and easy to start
+
+git remote add upstream https://github.com/btcpay-monero/btcpayserver-monero-plugin.git
+git fetch upstream
+get pull upstream master
+
+cd btcpayserver
+dotnet sln add ../btcpayerver-monero-plugin/BTCPayServer.Plugins/Monero/BTCPayServer.Plugins.Monero.csproj -s Plugins
+
+{
+"DEBUG_PLUGINS": "/absolute/path/btcpayserver-plugin-template/BTCPay.Plugins.Template/bin/Debug/net6.0/BTCPayServer.Plugins.Template.dll"
+}
