@@ -20,6 +20,7 @@ jobs:
         with:
           name: coverage-report
           github-token: ${{ secrets.API_GITHUB }}
+          run-id: ${{ github.event.workflow_run.id }}
       - name: Run codacy-coverage-reporter
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
