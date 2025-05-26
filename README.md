@@ -148,9 +148,11 @@ git clone https://github.com/btcpayserver/btcpayserver
 git clone https://github.com/btcpay-monero/btcpayserver-monero-plugin
 ```
 Your folder structure should look like this:
+```bash
 /YourWorkingDirectory
 ├── btcpayserver
 └── btcpayserver-monero-plugin
+```
 
 ## Initialize the Monero Plugin
 Navigate into the plugin directory and initialize submodules if necessary:
@@ -170,11 +172,11 @@ Refer to the GitHub Actions workflow in .github/workflows/dotnet.yml for the sta
 
 ## Injecting the Plugin into BTCPayServer
 To load the plugin into your local BTCPayServer instance, create a file named appsettings.dev.json in the root of the btcpayserver directory with the following content:
-
+```bash
 {
 "DEBUG_PLUGINS": "/absolute/path/to/btcpayserver-monero-plugin/BTCPayServer.Plugins.Monero/bin/Debug/net8.0/BTCPayServer.Plugins.Monero.dll"
 }
-
+```
 Replace the path with the actual full path to the built plugin DLL on your system.
 
 More info:
