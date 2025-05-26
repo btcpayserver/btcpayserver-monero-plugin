@@ -161,12 +161,7 @@ Navigate into the plugin directory and initialize submodules if necessary:
 cd btcpayserver-monero-plugin
 git submodule update --init --recursive
 ```
-Optionally, add the upstream repository to stay up to date with changes:
-```bash
-git remote add upstream https://github.com/btcpay-monero/btcpayserver-monero-plugin
-git fetch upstream
-git pull upstream master
-```
+
 ## Building the Plugin:
 Refer to the GitHub Actions workflow in .github/workflows/dotnet.yml for the standard build process.
 
