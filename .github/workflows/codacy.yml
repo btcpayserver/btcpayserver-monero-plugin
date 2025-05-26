@@ -6,6 +6,7 @@ on:
       - Build and Test
     types:
       - completed
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,12 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download coverage report
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v4.3.0
         with:
           name: coverage-report
-          path: ./coverage
+          github-token: ${{ secrets.API_GITHUB }}
+          run-id: ${{ github.event.workflow_run.id }}
       - name: Run codacy-coverage-reporter
         uses: codacy/codacy-coverage-reporter-action@v1.3.0
         with:
           project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
-          coverage-reports: ./coverage/coverage.cobertura.xml
+          coverage-reports: coverage.cobertura.xml
