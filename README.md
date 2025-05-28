@@ -34,6 +34,31 @@ BTCPay Server's Docker deployment simplifies the setup by automatically configur
 # For maintainers
 
 ## Building and testing
+
+## 🧑‍💻 Local Development Setup
+If you're contributing to this plugin or running a local development instance of BTCPay Server with the Monero plugin, follow these steps.
+## 1) Requirements
+
+- .NET 8.0 SDK or later
+- JetBrains Rider (recommended) or Visual Studio Code with C# support
+- Git
+- Docker and Docker Compose
+
+## 2) Clone the Repositories
+Create a working directory and clone both the BTCPay Server and Monero plugin repositories side by side:
+If you are a developer maintaining this plugin, in order to maintain this plugin, you need to clone this repository with `--recurse-submodules`:
+
+```bash
+git clone https://github.com/btcpayserver/btcpayserver
+git clone --recurse-submodules https://github.com/btcpay-monero/btcpayserver-monero-plugin
+```
+## 3. Build the Plugin
+Navigate to the plugin directory and restore/build the solution:
+```bash 
+cd btcpayserver-monero-plugin
+dotnet restore
+dotnet build btcpay-monero-plugin.sln
+```
 To build and run unit tests, run the following commands:
 
 ```bash
@@ -55,15 +80,7 @@ docker compose -f BTCPayServer.Plugins.IntegrationTests/docker-compose.yml run t
 
 **BTCPAY_XMR_CASHCOW_WALLET_DAEMON_URI** | **Optional**. The URI of the [monero-wallet-rpc](https://getmonero.dev/interacting/monero-wallet-rpc.html) interface for the cashcow wallet. This is used to create a second wallet for testing purposes in regtest mode. | http://
 
-
-If you are a developer maintaining this plugin, in order to maintain this plugin, you need to clone this repository with `--recurse-submodules`:
-```bash
-git clone --recurse-submodules https://github.com/btcpayserver/btcpayserver-monero-plugin
-```
-Then run the tests dependencies
-```bash
-docker-compose up -d dev
-```
+## 4. Configure BTCPay Server to Load the Plugin
 
 For vscode, open the `launch.json` file in the `.vscode` folder and set the `launchSettingsProfile` to `Altcoins-HTTPS`.
 
@@ -78,6 +95,8 @@ Then create the `appsettings.dev.json` file in `btcpayserver/BTCPayServer`, with
 }
 ```
 This will ensure that BTCPay Server loads the plugin when it starts.
+
+## 5. Start Development Environment
 
 Then start the development dependencies via docker-compose:
 ```bash
@@ -124,73 +143,6 @@ Note: Adding Monero to the infrastructure is not recommended for non-advanced us
 
 Lunanode, a VPS provider, offers an [easy way to provision the infrastructure](https://docs.btcpayserver.org/Deployment/LunaNode/) for BTCPay Server, then it installs the Docker Compose deployment on the provisioned VPS. The user can select Monero during provisioning, then the resulting VPS have a Monero deployed automatically, without the need for the user to use the command line. (But the user will still need to install this plugin manually)
 
-
-# 🛠 Initial Setup for Local Development of BTCPayServer and the Monero Plugin
-
-To begin developing locally with the **BTCPayServer Monero Plugin**, ensure the following prerequisites are met and follow the steps to set up your development environment.
-
----
-
-## ✅ Prerequisites
-
-- **IDE**: [JetBrains Rider](https://www.jetbrains.com/rider/) is recommended, but [Visual Studio Code](https://code.visualstudio.com/) with C# extensions also works.
-- **.NET SDK**: [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) or newer.
-- **Git**: Make sure Git is installed and available in your terminal.
-
----
-
-## 📁 Project Structure
-
-Clone the necessary repositories into the same parent directory:
-
-```bash
-git clone https://github.com/btcpayserver/btcpayserver
-git clone https://github.com/btcpay-monero/btcpayserver-monero-plugin
-```
-Your folder structure should look like this:
-```bash
-/YourWorkingDirectory
-├── btcpayserver
-└── btcpayserver-monero-plugin
-```
-
-## Initialize the Monero Plugin
-Navigate into the plugin directory and initialize submodules if necessary:
-
-```bash
-cd btcpayserver-monero-plugin
-git submodule update --init --recursive
-```
-
-## Building the Plugin:
-Refer to the GitHub Actions workflow in .github/workflows/dotnet.yml for the standard build process.
-
-## Injecting the Plugin into BTCPayServer
-To load the plugin into your local BTCPayServer instance, create a file named appsettings.dev.json in the root of the btcpayserver directory with the following content:
-```bash
-{
-"DEBUG_PLUGINS": "/absolute/path/to/btcpayserver-monero-plugin/BTCPayServer.Plugins.Monero/bin/Debug/net8.0/BTCPayServer.Plugins.Monero.dll"
-}
-```
-Replace the path with the actual full path to the built plugin DLL on your system.
-
-More info:
-👉 https://docs.btcpayserver.org/Development/Plugins/#plugin-reference
-
-## Running the Local Instance
-After completing the above steps, you should be able to run a local instance of BTCPayServer with the Monero plugin integrated.
-
-If you're using Docker for BTCPayServer, make sure that:
-
-The plugin path is accessible within the container
-
-The appropriate volume mappings are set
-
-You're now ready to start developing and testing the Monero plugin locally! 🎉
----
-
 # Licence
 
 [MIT](LICENSE.md)
-
-
