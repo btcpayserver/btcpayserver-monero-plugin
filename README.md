@@ -100,6 +100,7 @@ This will ensure that BTCPay Server loads the plugin when it starts.
 
 Then start the development dependencies via docker-compose:
 ```bash
+cd BTCPayServer.Plugins.IntegrationTests/
 docker-compose up -d dev
 ```
 
