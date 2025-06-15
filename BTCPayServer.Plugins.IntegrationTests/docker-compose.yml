@@ -92,7 +92,7 @@ services:
     image: btcpayserver/monero:0.18.3.4
     restart: unless-stopped
     container_name: monerod
-    entrypoint: monerod --fixed-difficulty 1 --log-level=2 --rpc-bind-ip=0.0.0.0 --confirm-external-bind --rpc-bind-port=18081 --block-notify="/bin/sh ./scripts/notifier.sh -k -X GET https://host.docker.internal:14142/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s" --regtest --no-igd --hide-my-port --offline --non-interactive
+    entrypoint: monerod --fixed-difficulty 1 --no-initial-sync --log-level=2 --rpc-bind-ip=0.0.0.0 --confirm-external-bind --rpc-bind-port=18081 --block-notify="/bin/sh ./scripts/notifier.sh -k -X GET https://host.docker.internal:14142/monerolikedaemoncallback/block?cryptoCode=xmr&hash=%s" --regtest --no-igd --hide-my-port --offline --non-interactive
     volumes:
       - "xmr_data:/home/monero/.bitmonero"
     ports:
