@@ -14,9 +14,14 @@ services:
       BTCPAY_XMR_DAEMON_URI: http://monerod:18081
       BTCPAY_XMR_WALLET_DAEMON_URI: http://xmr_wallet:18082
     depends_on:
-      - nbxplorer
-      - postgres
-      - xmr_wallet
+      nbxplorer: 
+        condition: service_started
+      postgres: 
+        condition: service_started
+      xmr_wallet:
+        condition: service_healthy
+      xmr_wallet_init:
+        condition: service_completed_successfully
     extra_hosts:
       - "tests:127.0.0.1"
     volumes:
@@ -102,19 +107,47 @@ services:
     image: btcpayserver/monero:0.18.3.4
     restart: unless-stopped
     container_name: xmr_wallet
-    entrypoint: monero-wallet-rpc --log-level 2 --allow-mismatched-daemon-version --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon --daemon-address=monerod:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh -k -X GET https://host.docker.internal:14142/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s"
+    entrypoint: monero-wallet-rpc --log-level 2 --allow-mismatched-daemon-version --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18082 --non-interactive --trusted-daemon --daemon-address=monerod:18081 --wallet-dir=/wallet --tx-notify="/bin/sh ./scripts/notifier.sh -k -X GET https://host.docker.internal:14142/monerolikedaemoncallback/tx?cryptoCode=xmr&hash=%s" --no-initial-sync
     ports:
       - "18082:18082"
     volumes:
       - "xmr_wallet:/wallet"
     depends_on:
       - monerod
-  
+    healthcheck:
+      test: |
+        curl -X POST http://localhost:18082/json_rpc \
+        -H 'Content-Type: application/json' \
+        -d '{"jsonrpc":"2.0","id":"0","method":"get_version"}' || exit 1
+      interval: 1s
+      timeout: 5s
+      retries: 5
+      start_period: 2s
+
+  xmr_wallet_init:
+    image: curlimages/curl:latest
+    container_name: xmr_wallet_init
+    depends_on:
+      xmr_wallet:
+        condition: service_healthy
+    command: |
+      sh -c ' # Create/Open a wallet with one account label
+        curl -v -X POST http://xmr_wallet:18082/json_rpc \
+          -d "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"create_wallet\",\"params\":{\"filename\":\"xmr_wallet_init\",\"password\":\"\",\"language\":\"English\"}}" \
+          -H "Content-Type: application/json"
+        curl -v -X POST http://xmr_wallet:18082/json_rpc \
+          -d "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"open_wallet\",\"params\":{\"filename\":\"xmr_wallet_init\",\"password\":\"\"}}" \
+          -H "Content-Type: application/json"
+        curl -v -X POST http://xmr_wallet:18082/json_rpc \
+          -d "{\"jsonrpc\":\"2.0\",\"id\":\"0\",\"method\":\"create_account\",\"params\":{\"label\":\"Test Account\"}}" \
+          -H "Content-Type: application/json"
+      '
+
   xmr_cashcow_wallet:
     image: btcpayserver/monero:0.18.3.4
     restart: unless-stopped
     container_name: xmr_cashcow_wallet
-    entrypoint: monero-wallet-rpc --log-level 2 --allow-mismatched-daemon-version --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18092 --non-interactive --trusted-daemon  --daemon-address=monerod:18081 --wallet-dir=/wallet
+    entrypoint: monero-wallet-rpc --log-level 2 --allow-mismatched-daemon-version --rpc-bind-ip=0.0.0.0 --disable-rpc-login --confirm-external-bind --rpc-bind-port=18092 --non-interactive --trusted-daemon  --daemon-address=monerod:18081 --wallet-dir=/wallet --no-initial-sync
     ports:
       - "18092:18092"
     volumes:
