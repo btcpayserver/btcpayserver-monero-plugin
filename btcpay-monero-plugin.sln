@@ -3,37 +3,40 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "btcpayserver", "btcpayserver", "{891F21E0-262C-4430-90C5-7A540AD7C9AD}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "btcpayserver", "submodules\btcpayserver", "{891F21E0-262C-4430-90C5-7A540AD7C9AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer", "btcpayserver\BTCPayServer\BTCPayServer.csproj", "{049FC011-1952-4140-9652-12921C106B02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer", "submodules\btcpayserver\BTCPayServer\BTCPayServer.csproj", "{049FC011-1952-4140-9652-12921C106B02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Abstractions", "btcpayserver\BTCPayServer.Abstractions\BTCPayServer.Abstractions.csproj", "{3ACB5270-BA91-4326-A7CC-5EBEFB8FB511}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Abstractions", "submodules\btcpayserver\BTCPayServer.Abstractions\BTCPayServer.Abstractions.csproj", "{3ACB5270-BA91-4326-A7CC-5EBEFB8FB511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Client", "btcpayserver\BTCPayServer.Client\BTCPayServer.Client.csproj", "{157B3D22-F859-482C-B387-2C326A3ECB52}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Client", "submodules\btcpayserver\BTCPayServer.Client\BTCPayServer.Client.csproj", "{157B3D22-F859-482C-B387-2C326A3ECB52}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Common", "btcpayserver\BTCPayServer.Common\BTCPayServer.Common.csproj", "{0A4AAC1F-513C-493C-B173-AA9D28FF5E60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Common", "submodules\btcpayserver\BTCPayServer.Common\BTCPayServer.Common.csproj", "{0A4AAC1F-513C-493C-B173-AA9D28FF5E60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Data", "btcpayserver\BTCPayServer.Data\BTCPayServer.Data.csproj", "{CB161BDA-5350-4B54-AA94-9540189BAE81}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Data", "submodules\btcpayserver\BTCPayServer.Data\BTCPayServer.Data.csproj", "{CB161BDA-5350-4B54-AA94-9540189BAE81}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.PluginPacker", "btcpayserver\BTCPayServer.PluginPacker\BTCPayServer.PluginPacker.csproj", "{E8FBC53B-768F-4454-B7AF-A4BD104B7F0D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.PluginPacker", "submodules\btcpayserver\BTCPayServer.PluginPacker\BTCPayServer.PluginPacker.csproj", "{E8FBC53B-768F-4454-B7AF-A4BD104B7F0D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Rating", "btcpayserver\BTCPayServer.Rating\BTCPayServer.Rating.csproj", "{67171233-EBD1-4086-9074-57D0F3A74ADC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Rating", "submodules\btcpayserver\BTCPayServer.Rating\BTCPayServer.Rating.csproj", "{67171233-EBD1-4086-9074-57D0F3A74ADC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Tests", "btcpayserver\BTCPayServer.Tests\BTCPayServer.Tests.csproj", "{B481573C-744D-433F-B4DA-442E3E19562E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Tests", "submodules\btcpayserver\BTCPayServer.Tests\BTCPayServer.Tests.csproj", "{B481573C-744D-433F-B4DA-442E3E19562E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{C9628212-0A00-4BF2-AF84-21797124579F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Plugins.Monero", "Plugins\Monero\BTCPayServer.Plugins.Monero.csproj", "{319C8C91-952F-4CF6-A251-058DFC66D70F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Plugins.IntegrationTests", "BTCPayServer.Plugins.IntegrationTests\BTCPayServer.Plugins.IntegrationTests.csproj", "{B481573C-744D-433F-B4DA-442E3E19562E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{BDB6EEEA-46CE-4E42-A1EC-A705518094A5}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
 		.gitignore = .gitignore
 		.gitmodules = .gitmodules
-		docker-compose.yml = docker-compose.yml
 		LICENSE.md = LICENSE.md
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BTCPayServer.Plugins.UnitTests", "BTCPayServer.Plugins.UnitTests\BTCPayServer.Plugins.UnitTests.csproj", "{BC95362E-D430-4CB4-B888-EE1C054C1E7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,6 +83,10 @@ Global
 		{319C8C91-952F-4CF6-A251-058DFC66D70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{319C8C91-952F-4CF6-A251-058DFC66D70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{319C8C91-952F-4CF6-A251-058DFC66D70F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC95362E-D430-4CB4-B888-EE1C054C1E7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC95362E-D430-4CB4-B888-EE1C054C1E7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC95362E-D430-4CB4-B888-EE1C054C1E7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC95362E-D430-4CB4-B888-EE1C054C1E7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{049FC011-1952-4140-9652-12921C106B02} = {891F21E0-262C-4430-90C5-7A540AD7C9AD}

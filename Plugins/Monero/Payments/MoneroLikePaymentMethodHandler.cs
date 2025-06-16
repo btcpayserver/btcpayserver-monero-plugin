@@ -1,24 +1,12 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
-using BTCPayServer.Abstractions.Extensions;
-using BTCPayServer.BIP78.Sender;
+
 using BTCPayServer.Data;
-using BTCPayServer.Logging;
-using BTCPayServer.Models;
-using BTCPayServer.Models.InvoicingModels;
 using BTCPayServer.Payments;
-using BTCPayServer.Plugins.Altcoins;
-using BTCPayServer.Rating;
+using BTCPayServer.Plugins.Monero.RPC.Models;
 using BTCPayServer.Plugins.Monero.Services;
 using BTCPayServer.Plugins.Monero.Utils;
-using BTCPayServer.Plugins.Monero.RPC.Models;
-using BTCPayServer.Services.Invoices;
-using BTCPayServer.Services.Rates;
-using NBitcoin;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -40,32 +28,44 @@ namespace BTCPayServer.Plugins.Monero.Payments
             Serializer = BlobSerializer.CreateSerializer().Serializer;
             _moneroRpcProvider = moneroRpcProvider;
         }
+        bool IsReady() => _moneroRpcProvider.IsConfigured(_network.CryptoCode) && _moneroRpcProvider.IsAvailable(_network.CryptoCode);
 
         public Task BeforeFetchingRates(PaymentMethodContext context)
         {
             context.Prompt.Currency = _network.CryptoCode;
             context.Prompt.Divisibility = _network.Divisibility;
-            if (context.Prompt.Activated)
+            if (context.Prompt.Activated && IsReady())
             {
                 var supportedPaymentMethod = ParsePaymentMethodConfig(context.PaymentMethodConfig);
                 var walletClient = _moneroRpcProvider.WalletRpcClients[_network.CryptoCode];
                 var daemonClient = _moneroRpcProvider.DaemonRpcClients[_network.CryptoCode];
-                context.State = new Prepare()
+                try
                 {
-                    GetFeeRate = daemonClient.SendCommandAsync<GetFeeEstimateRequest, GetFeeEstimateResponse>("get_fee_estimate", new GetFeeEstimateRequest()),
-                    ReserveAddress = s => walletClient.SendCommandAsync<CreateAddressRequest, CreateAddressResponse>("create_address", new CreateAddressRequest() { Label = $"btcpay invoice #{s}", AccountIndex = supportedPaymentMethod.AccountIndex }),
-                    AccountIndex = supportedPaymentMethod.AccountIndex
-                };
+                    context.State = new Prepare()
+                    {
+                        GetFeeRate = daemonClient.SendCommandAsync<GetFeeEstimateRequest, GetFeeEstimateResponse>("get_fee_estimate", new GetFeeEstimateRequest()),
+                        ReserveAddress = s => walletClient.SendCommandAsync<CreateAddressRequest, CreateAddressResponse>("create_address", new CreateAddressRequest() { Label = $"btcpay invoice #{s}", AccountIndex = supportedPaymentMethod.AccountIndex }),
+                        AccountIndex = supportedPaymentMethod.AccountIndex
+                    };
+                }
+                catch (Exception ex)
+                {
+                    context.Logs.Write($"Error in BeforeFetchingRates: {ex.Message}", InvoiceEventData.EventSeverity.Error);
+                }
             }
             return Task.CompletedTask;
         }
 
         public async Task ConfigurePrompt(PaymentMethodContext context)
         {
-            if (!_moneroRpcProvider.IsAvailable(_network.CryptoCode))
+            if (!_moneroRpcProvider.IsConfigured(_network.CryptoCode))
+            {
+                throw new PaymentMethodUnavailableException($"BTCPAY_XMR_WALLET_DAEMON_URI or BTCPAY_XMR_DAEMON_URI isn't configured");
+            }
+            if (!_moneroRpcProvider.IsAvailable(_network.CryptoCode) || context.State is not Prepare moneroPrepare)
                 throw new PaymentMethodUnavailableException($"Node or wallet not available");
             var invoice = context.InvoiceEntity;
-            Prepare moneroPrepare = (Prepare)context.State;
+
             var feeAtomicRatePerByte = await moneroPrepare.GetFeeRate;
             var address = await moneroPrepare.ReserveAddress(invoice.Id);
 
@@ -98,11 +98,11 @@ namespace BTCPayServer.Plugins.Monero.Payments
             public long AccountIndex { get; internal set; }
         }
 
-        public MoneroLikeOnChainPaymentMethodDetails ParsePaymentPromptDetails(Newtonsoft.Json.Linq.JToken details)
+        public MoneroLikeOnChainPaymentMethodDetails ParsePaymentPromptDetails(JToken details)
         {
             return details.ToObject<MoneroLikeOnChainPaymentMethodDetails>(Serializer);
         }
-        object IPaymentMethodHandler.ParsePaymentPromptDetails(Newtonsoft.Json.Linq.JToken details)
+        object IPaymentMethodHandler.ParsePaymentPromptDetails(JToken details)
         {
             return ParsePaymentPromptDetails(details);
         }

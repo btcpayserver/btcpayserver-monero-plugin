@@ -1,0 +1,64 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - "master"
+  pull_request:
+    branches:
+      - "master"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Initialize and update submodules
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Clean project
+      run: dotnet clean
+
+    - name: Build projects
+      run: dotnet build  -c Release --no-restore
+
+    - name: Deterministic build check
+      run: |
+        dotnet tool install --global dotnet-validate --version 0.0.1-preview.537
+        dotnet pack Plugins/Monero/BTCPayServer.Plugins.Monero.csproj -c Release /p:PackageVersion=1 --no-build -o nuget-packages
+        dotnet validate package local nuget-packages/BTCPayServer.Plugins.Monero.1.0.0.nupkg
+
+    - name: Run unit tests
+      run: |
+        dotnet tool install --global JetBrains.dotCover.CommandLineTools
+        dotCover cover-dotnet --TargetArguments="test BTCPayServer.Plugins.UnitTests -c Release --no-build" --output=coverage/dotCover.UnitTests.output.dcvr --filters="-:Assembly=BTCPayServer.Plugins.UnitTests;-:Assembly=testhost;-:Assembly=BTCPayServer;-:Class=AspNetCoreGeneratedDocument.*"
+
+    - name: Run integration tests
+      run: docker compose -f BTCPayServer.Plugins.IntegrationTests/docker-compose.yml run tests
+
+    - name: Cleanup Docker containers
+      if: always()
+      run: docker compose -f BTCPayServer.Plugins.IntegrationTests/docker-compose.yml down -v
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: coverage-report
+        path: coverage/dotcover.xml
+
+    - name: Upload NuGet package
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: nuget-package-${{ github.sha }}
+        path: nuget-packages/BTCPayServer.Plugins.Monero.1.0.0.nupkg
