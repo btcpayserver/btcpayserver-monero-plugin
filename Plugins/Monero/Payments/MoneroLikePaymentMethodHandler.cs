@@ -65,10 +65,11 @@ namespace BTCPayServer.Plugins.Monero.Payments
             if (!_moneroRpcProvider.IsAvailable(_network.CryptoCode) || context.State is not Prepare moneroPrepare)
                 throw new PaymentMethodUnavailableException($"Node or wallet not available");
             var invoice = context.InvoiceEntity;
-            var feeRatePerKb = await moneroPrepare.GetFeeRate;
+
+            var feeAtomicRatePerByte = await moneroPrepare.GetFeeRate;
             var address = await moneroPrepare.ReserveAddress(invoice.Id);
 
-            var feeRatePerByte = feeRatePerKb.Fee / 1024;
+            var feeRatePerByte = feeAtomicRatePerByte.Fee / Math.Pow(10, 12);
             var details = new MoneroLikeOnChainPaymentMethodDetails()
             {
                 AccountIndex = moneroPrepare.AccountIndex,
@@ -76,7 +77,7 @@ namespace BTCPayServer.Plugins.Monero.Payments
                 InvoiceSettledConfirmationThreshold = ParsePaymentMethodConfig(context.PaymentMethodConfig).InvoiceSettledConfirmationThreshold
             };
             context.Prompt.Destination = address.Address;
-            context.Prompt.PaymentMethodFee = MoneroMoney.Convert(feeRatePerByte * 100);
+            context.Prompt.PaymentMethodFee = MoneroMoney.Convert(feeRatePerByte * 1500);
             context.Prompt.Details = JObject.FromObject(details, Serializer);
             context.TrackedDestinations.Add(address.Address);
         }
