@@ -58,7 +58,10 @@ public class MoneroPluginIntegrationTest(ITestOutputHelper helper) : MoneroAndBi
         await s.Page.Locator("#page-primary").ClickAsync();
 
         // View the invoice
-        await s.Page.Locator("a.invoice-checkout-link").ClickAsync();
+        var href = await s.Page.Locator("a[href^='/i/']").GetAttributeAsync("href");
+        var invoiceId = href?.Split("/i/").Last();
+        helper.WriteLine($"Invoice ID: {invoiceId}");
+        await s.Page.Locator($"a[href='/i/{invoiceId}']").ClickAsync();
         await s.Page.ClickAsync("#DetailsToggle");
 
         // Verify the total fiat amount is $4.20
