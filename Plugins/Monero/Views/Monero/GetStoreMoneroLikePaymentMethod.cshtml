@@ -20,13 +20,14 @@
             <div class="card">
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">Node available: @Model.Summary.DaemonAvailable</li>
+                    <li class="list-group-item">Wallet available: @Model.Summary.WalletAvailable (@(Model.WalletFileFound ? "Wallet file present" : "Wallet file not found"))</li>
                     <li class="list-group-item">Last updated: @Model.Summary.UpdatedAt</li>
                     <li class="list-group-item">Synced: @Model.Summary.Synced (@Model.Summary.CurrentHeight / @Model.Summary.TargetHeight)</li>
                 </ul>
             </div>
         }
 
-        @if (Model.SupportWalletExport && Model.Summary?.WalletHeight is null or 0)
+        @if (!Model.WalletFileFound || Model.Summary?.WalletHeight is null or 0)
         {
             <form method="post" asp-action="GetStoreMoneroLikePaymentMethod" 
                   asp-route-storeId="@Context.GetRouteValue("storeId")"
