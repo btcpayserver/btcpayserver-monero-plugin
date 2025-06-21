@@ -55,12 +55,12 @@ public class MoneroPluginIntegrationTest(ITestOutputHelper helper) : MoneroAndBi
         await s.Page.Locator("#page-primary").ClickAsync();
         await s.Page.FillAsync("#Amount", "4.20");
         await s.Page.FillAsync("#BuyerEmail", "monero@monero.com");
+        await Task.Delay(TimeSpan.FromSeconds(25)); // wallet-rpc needs some time to sync. refactor this later
         await s.Page.Locator("#page-primary").ClickAsync();
 
         // View the invoice
         var href = await s.Page.Locator("a[href^='/i/']").GetAttributeAsync("href");
         var invoiceId = href?.Split("/i/").Last();
-        helper.WriteLine($"Invoice ID: {invoiceId}");
         await s.Page.Locator($"a[href='/i/{invoiceId}']").ClickAsync();
         await s.Page.ClickAsync("#DetailsToggle");
 
