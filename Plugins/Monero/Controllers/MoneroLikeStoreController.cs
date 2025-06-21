@@ -138,7 +138,8 @@ namespace BTCPayServer.Plugins.Monero.Controllers
                     settings != null &&
                     settlementThresholdChoice is MoneroLikeSettlementThresholdChoice.Custom
                         ? settings.InvoiceSettledConfirmationThreshold
-                        : null
+                        : null,
+                SupportWalletExport = configurationItem?.WalletDirectory is not null
             };
         }
 

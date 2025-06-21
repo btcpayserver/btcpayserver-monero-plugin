@@ -80,4 +80,7 @@
   <ItemGroup>
     <EmbeddedResource Include="monero.svg" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Services\MoneroCheckoutCheatModeExtension.cs" />
+  </ItemGroup>
 </Project>
